@@ -1,0 +1,7 @@
+﻿  shop_console.cpp
+D:\repos\shop_console\shop_console\shop_console.cpp(76,20): warning C4018: '<': signed/unsigned mismatch
+D:\repos\shop_console\shop_console\shop_console.cpp(211,20): warning C4018: '<': signed/unsigned mismatch
+D:\repos\shop_console\shop_console\shop_console.cpp(286,20): warning C4018: '<': signed/unsigned mismatch
+D:\repos\shop_console\shop_console\shop_console.cpp(320,5): error C3861: 'display_games': identifier not found
+D:\repos\shop_console\shop_console\shop_console.cpp(449,20): warning C4018: '<': signed/unsigned mismatch
+D:\repos\shop_console\shop_console\shop_console.cpp(552,20): warning C4018: '<': signed/unsigned mismatch
