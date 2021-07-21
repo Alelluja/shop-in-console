@@ -1,7 +1,8 @@
 ﻿  shop_console.cpp
-D:\repos\shop_console\shop_console\shop_console.cpp(76,20): warning C4018: '<': signed/unsigned mismatch
-D:\repos\shop_console\shop_console\shop_console.cpp(211,20): warning C4018: '<': signed/unsigned mismatch
-D:\repos\shop_console\shop_console\shop_console.cpp(286,20): warning C4018: '<': signed/unsigned mismatch
-D:\repos\shop_console\shop_console\shop_console.cpp(320,5): error C3861: 'display_games': identifier not found
-D:\repos\shop_console\shop_console\shop_console.cpp(449,20): warning C4018: '<': signed/unsigned mismatch
-D:\repos\shop_console\shop_console\shop_console.cpp(552,20): warning C4018: '<': signed/unsigned mismatch
+D:\codes\shop-in-console\shop_console\shop_console.cpp(66,8): warning C4018: '>': signed/unsigned mismatch
+D:\codes\shop-in-console\shop_console\shop_console.cpp(203,20): warning C4018: '<': signed/unsigned mismatch
+D:\codes\shop-in-console\shop_console\shop_console.cpp(286,20): warning C4018: '<': signed/unsigned mismatch
+D:\codes\shop-in-console\shop_console\shop_console.cpp(356,20): warning C4018: '<': signed/unsigned mismatch
+D:\codes\shop-in-console\shop_console\shop_console.cpp(446,20): warning C4018: '<': signed/unsigned mismatch
+D:\codes\shop-in-console\shop_console\shop_console.cpp(543,20): warning C4018: '<': signed/unsigned mismatch
+  shop_console.vcxproj -> D:\codes\shop-in-console\Debug\shop_console.exe

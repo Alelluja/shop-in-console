@@ -1,9 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <array>
 #include <fstream>
 #include <string>
-
-using namespace std;
 
 float user_money = 1000.0;
 
@@ -14,7 +13,7 @@ public:
 	unsigned int game_price;
 
 public:
-	string game_name;
+	std::string game_name;
 };
 
 class game_data 
@@ -23,11 +22,11 @@ public:
 	unsigned int price;
 
 public:
-	string type;
-	string name;
+	std::string type;
+	std::string name;
 };
 
-const string game_type_names[] =
+std::array<std::string, 6> game_type_names =
 {
 	"FPS",
 	"MMORPG",
@@ -40,22 +39,22 @@ const string game_type_names[] =
 int get_choice_int();
 void clear_console();
 
-void display_shop(vector<game_data>& g_data, vector<shopping_cart_data>& s_data);
-void display_games(vector<game_data>& g_data, vector<shopping_cart_data>& s_data);
-void admin_menu(vector<game_data>& g_data);
-void shopping_cart(vector<game_data>& g_data, vector<shopping_cart_data>& s_data);
-void ask_for_add_to_shopping_cart(vector<game_data>& g_data, vector<shopping_cart_data>& s_data, int game_id);
-void add_to_shopping_cart(vector<game_data>& g_data, vector<shopping_cart_data>& s_data, int game_index);
-void choose_game(vector<game_data>& g_data, vector<shopping_cart_data>& s_data, int type);
-void confirm_purchase(vector<game_data>& g_data, vector<shopping_cart_data>& s_data);
-void del_from_shopping_cart_file(vector<shopping_cart_data>& s_data);
+void display_shop(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data);
+void display_games(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data);
+void admin_menu(std::vector<game_data>& g_data);
+void shopping_cart(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data);
+void ask_for_add_to_shopping_cart(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data, int game_id);
+void add_to_shopping_cart(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data, int game_index);
+void choose_game(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data, int type);
+void confirm_purchase(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data);
+void del_from_shopping_cart_file(std::vector<shopping_cart_data>& s_data);
 
 //Admin Menu options
-void add_game(vector<game_data>& g_data);
-void del_game(vector<game_data>& g_data);
-void change_game_name(vector<game_data>& g_data);
-void change_game_price(vector<game_data>& g_data);
-void change_game_type(vector<game_data>& g_data);
+void add_game(std::vector<game_data>& g_data);
+void del_game(std::vector<game_data>& g_data);
+void change_game_name(std::vector<game_data>& g_data);
+void change_game_price(std::vector<game_data>& g_data);
+void change_game_type(std::vector<game_data>& g_data);
 
 bool is_valid_type(int i)
 {
@@ -64,9 +63,7 @@ bool is_valid_type(int i)
 		return false;
 	}
 
-	int s = *(&game_type_names + 1) - game_type_names;
-
-	if (i > s)
+	if (i > game_type_names.size())
 	{
 		return false;
 	}
@@ -74,87 +71,79 @@ bool is_valid_type(int i)
 	return true;
 }
 
-bool is_valid_game_id(int choice, vector<int> ids)
+bool is_valid_game_id(int choice, std::vector<int> ids)
 {
-	for (int i = 0; i < ids.size(); i++)
-	{
-		if (ids[i] == choice)
-		{
-			return true;
-		}
-	}
-
-	return false;
+	return std::find(ids.begin(), ids.end(), choice) != ids.end();
 }
 
-bool ask_client(string question)
+bool ask_client(std::string question)
 {
-	cout << "\nDo you want " << question << "?\n" << endl;
-	printf_s("1. Yes (Type 1)\n");
-	printf_s("2. No (Type 2)\n\n");
+	printf("\nDo you want %s?\n\n", question.c_str());
+	printf("1. Yes (Type 1)\n");
+	printf("2. No (Type 2)\n\n");
 
 	int choice = 0;
 
-	printf_s("Choose option: ");
+	printf("Choose option: ");
 	choice = get_choice_int();
 
 	return choice == 1;
 }
 
-bool write_games_file(vector<game_data>& g_data)
+bool write_games_file(std::vector<game_data>& g_data)
 {
-	ofstream file("shop_data.dat");
+	std::ofstream file("shop_data.dat");
 
 	if (!file.good())
 	{
-		printf_s("Cannot open file!\n");
+		printf("Cannot open file!\n");
 
 		return false;
 	}
 
 	for (game_data& game : g_data)
 	{
-		file << game.type << "#" << game.name << "#" << game.price << endl;
+		file << game.type << "#" << game.name << "#" << game.price << std::endl;
 	}
 
 	return true;
 }
 
-bool write_shopping_cart_file(vector<shopping_cart_data>& s_data)
+bool write_shopping_cart_file(std::vector<shopping_cart_data>& s_data)
 {
-	ofstream file("shopping_cart_data.dat");
+	std::ofstream file("shopping_cart_data.dat");
 
 	if (!file.good())
 	{
-		printf_s("Cannot open file!\n");
+		printf("Cannot open file!\n");
 
 		return false;
 	}
 
 	for (shopping_cart_data& shopping_cart : s_data)
 	{
-		file << shopping_cart.game_id << "#" << shopping_cart.game_name << "#" << shopping_cart.game_price << endl;
+		file << shopping_cart.game_id << "#" << shopping_cart.game_name << "#" << shopping_cart.game_price << std::endl;
 	}
 
 	return true;
 }
 
-vector<game_data> read_games_file()
+std::vector<game_data> read_games_file()
 {
-	ifstream stream("shop_data.dat", ios::out);
+	std::ifstream stream("shop_data.dat", std::ios::out);
 
 	if (!stream.good())
 	{
-		printf_s("Cannot open file!\n");
+		printf("Cannot open file!\n");
 
 		return {};
 	}
 
-	vector<game_data> g_data;
+	std::vector<game_data> g_data;
 
 	game_data game;
 
-	string price;
+	std::string price;
 
 	while (getline(stream, game.type, '#') && getline(stream, game.name, '#') && getline(stream, price))
 	{
@@ -164,7 +153,7 @@ vector<game_data> read_games_file()
 
 	/*for (game_data& game : g_data)
 	{
-		cout << "TYPE: " << game.type << " NAME: " << game.name << " PRICE: " << game.price << endl;
+		printf("TYPE: %s | NAME: %s | PRICE: %i\n", game.type, game.name, game.price);
 	}*/
 	
 	stream.close();
@@ -172,22 +161,22 @@ vector<game_data> read_games_file()
 	return g_data;
 }
 
-vector<shopping_cart_data> read_shopping_cart_file()
+std::vector<shopping_cart_data> read_shopping_cart_file()
 {
-	ifstream stream("shopping_cart_data.dat", ios::out);
+	std::ifstream stream("shopping_cart_data.dat", std::ios::out);
 
 	if (!stream.good())
 	{
-		printf_s("Cannot open file!\n");
+		printf("Cannot open file!\n");
 
 		return {};
 	}
 
-	vector<shopping_cart_data> s_data;
+	std::vector<shopping_cart_data> s_data;
 
 	shopping_cart_data shopping_cart;
 
-	string price,
+	std::string price,
 		game_index;
 
 	while (getline(stream, game_index, '#') && getline(stream, shopping_cart.game_name, '#') && getline(stream, price))
@@ -200,7 +189,7 @@ vector<shopping_cart_data> read_shopping_cart_file()
 
 	/*for (shopping_cart_data& shopping_cart : s_data)
 	{
-		cout << "INDEX: " << shopping_cart.game_id << " NAME: " << shopping_cart.game_name << " PRICE: " << shopping_cart.game_price << endl;
+		printf("INDEX: %i | NAME: %s | PRICE: %i\n", shopping_cart.game_id, shopping_cart.game_name, shopping_cart.game_price);
 	}*/
 
 	stream.close();
@@ -208,7 +197,7 @@ vector<shopping_cart_data> read_shopping_cart_file()
 	return s_data;
 }
 
-int search_game_id(vector<game_data>& g_data, const string& game_name)
+int search_game_id(std::vector<game_data>& g_data, const std::string& game_name)
 {
 	// Iterate over all elements in Vector
 	for (int i = 0; i < g_data.size(); i++)
@@ -222,25 +211,33 @@ int search_game_id(vector<game_data>& g_data, const string& game_name)
 	return -1;
 }
 
-pair<string, int> game_field_changer(vector<game_data>& g_data, const string& question)
+// Error - message : see reference to function template instantiation
+/*int search_game_id(std::vector<game_data>& g_data, const std::string& game_name)
+{
+	auto it = std::find(g_data.begin(), g_data.end(), game_name);
+
+	return std::distance(g_data.begin(), it);
+}*/
+
+std::pair<std::string, int> game_field_changer(std::vector<game_data>& g_data, const std::string& question)
 {
 	clear_console();
 
-	string game_name;
+	std::string game_name;
 
-	printf_s("Enter the name of the game to be changed: ");
-	getline(cin, game_name);
+	printf("Enter the name of the game to be changed: ");
+	getline(std::cin, game_name);
 
 	int game_id = search_game_id(g_data, game_name);
 
 	if (game_id > -1)
 	{
-		string temp_variable;
+		std::string temp_variable;
 
-		printf_s("\nFound game!\n\n");
+		printf("\nFound game!\n\n");
 
-		printf_s("Enter the %s: ", question.c_str());
-		getline(cin, temp_variable);
+		printf("Enter the %s: ", question.c_str());
+		getline(std::cin, temp_variable);
 
 		return { temp_variable, game_id };
 	}
@@ -250,9 +247,9 @@ pair<string, int> game_field_changer(vector<game_data>& g_data, const string& qu
 
 int get_choice_int()
 {
-	string temp;
+	std::string temp;
 
-	getline(cin, temp);
+	getline(std::cin, temp);
 
 	if (temp == "")
 	{
@@ -266,8 +263,8 @@ int main()
 {
 	clear_console();
 
-	vector<game_data> g_data = read_games_file();
-	vector<shopping_cart_data> s_data = read_shopping_cart_file();
+	std::vector<game_data> g_data = read_games_file();
+	std::vector<shopping_cart_data> s_data = read_shopping_cart_file();
 
 	display_shop(g_data, s_data);
 
@@ -282,17 +279,17 @@ void clear_console()
 	system("cls");
 }
 
-void display_games_in_shopping_cart(vector<shopping_cart_data>& s_data)
+void display_games_in_shopping_cart(std::vector<shopping_cart_data>& s_data)
 {
 	printf("Games in shopping cart: \n");
 
 	for (int i = 0; i < s_data.size(); i++)
 	{
-		printf("%i. %s\t%i PLN\n", s_data[i].game_id, s_data[i].game_name.c_str(), s_data[i].game_price);
+		printf("%i. %s \t%i PLN\n", s_data[i].game_id, s_data[i].game_name.c_str(), s_data[i].game_price);
 	}
 }
 
-void display_shop(vector<game_data>& g_data, vector<shopping_cart_data>& s_data)
+void display_shop(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data)
 {
 	// Handle input
 	int choice = -1;
@@ -349,17 +346,14 @@ void display_shop(vector<game_data>& g_data, vector<shopping_cart_data>& s_data)
 	}
 }
 
-void display_games(vector<game_data>& g_data, vector<shopping_cart_data>& s_data)
+void display_games(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data)
 {
 	clear_console();
 
 	printf("---= TYPE GAMES =----\n\n");
 
-	// Size of game_type_names array. Pointer hack.
-	int s = *(&game_type_names + 1) - game_type_names;
-
 	// Display all the game types.
-	for (int i = 0; i < s; i++)
+	for (int i = 0; i < game_type_names.size(); i++)
 	{
 		printf("%i. Games %s\n", i + 1, game_type_names[i].c_str());
 	}
@@ -393,7 +387,7 @@ void display_games(vector<game_data>& g_data, vector<shopping_cart_data>& s_data
 	choose_game(g_data, s_data, choice);
 }
 
-void shopping_cart(vector<game_data>& g_data, vector<shopping_cart_data>& s_data)
+void shopping_cart(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data)
 {
 	clear_console();
 
@@ -439,14 +433,14 @@ void shopping_cart(vector<game_data>& g_data, vector<shopping_cart_data>& s_data
 	}
 }
 
-void choose_game(vector<game_data>& g_data, vector<shopping_cart_data>& s_data, int type)
+void choose_game(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data, int type)
 {
 	clear_console();
 
 	// Display header.
 	printf("Available games (%s):\n\n", game_type_names[type].c_str());
 
-	vector<int> ids;
+	std::vector<int> ids;
 
 	// Display all the games in given type.
 	for (int i = 0; i < g_data.size(); i++)
@@ -457,7 +451,7 @@ void choose_game(vector<game_data>& g_data, vector<shopping_cart_data>& s_data, 
 			continue;
 		}
 
-		printf("%i. %s\t%i PLN (Type %i)\n", i + 1, g_data[i].name.c_str(), g_data[i].price, i + 1);
+		printf("%i. %s \t%i PLN (Type %i)\n", i + 1, g_data[i].name.c_str(), g_data[i].price, i + 1);
 
 		ids.push_back(i + 1);
 	}
@@ -481,7 +475,7 @@ void choose_game(vector<game_data>& g_data, vector<shopping_cart_data>& s_data, 
 	ask_for_add_to_shopping_cart(g_data, s_data, choice - 1);
 }
 
-void ask_for_add_to_shopping_cart(vector<game_data>& g_data, vector<shopping_cart_data>& s_data, int game_id) 
+void ask_for_add_to_shopping_cart(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data, int game_id) 
 {
 	clear_console();
 
@@ -523,7 +517,7 @@ void ask_for_add_to_shopping_cart(vector<game_data>& g_data, vector<shopping_car
 	}
 }
 
-void add_to_shopping_cart(vector<game_data>& g_data, vector<shopping_cart_data>& s_data, int game_index)
+void add_to_shopping_cart(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data, int game_index)
 {
 	shopping_cart_data scd;
 
@@ -540,7 +534,7 @@ void add_to_shopping_cart(vector<game_data>& g_data, vector<shopping_cart_data>&
 	display_shop(g_data, s_data);
 }
 
-void confirm_purchase(vector<game_data>& g_data, vector<shopping_cart_data>& s_data)
+void confirm_purchase(std::vector<game_data>& g_data, std::vector<shopping_cart_data>& s_data)
 {
 	clear_console();
 
@@ -561,7 +555,7 @@ void confirm_purchase(vector<game_data>& g_data, vector<shopping_cart_data>& s_d
 	display_shop(g_data, s_data);
 }
 
-void del_from_shopping_cart_file(vector<shopping_cart_data>& s_data)
+void del_from_shopping_cart_file(std::vector<shopping_cart_data>& s_data)
 {
 	shopping_cart_data scd;
 
@@ -570,7 +564,7 @@ void del_from_shopping_cart_file(vector<shopping_cart_data>& s_data)
 	write_shopping_cart_file(s_data);
 }
 
-void admin_menu(vector<game_data>& g_data)
+void admin_menu(std::vector<game_data>& g_data)
 {
 	clear_console();
 
@@ -655,42 +649,42 @@ void admin_menu(vector<game_data>& g_data)
 	}
 }
 
-void add_game(vector<game_data>& g_data)
+void add_game(std::vector<game_data>& g_data)
 {
 	clear_console();
 
 	game_data gd;
 
-	string price;
+	std::string price;
 
-	printf_s("Enter the type of game to add: ");
-	getline(cin, gd.type);
+	printf("Enter the type of game to add: ");
+	getline(std::cin, gd.type);
 
-	printf_s("Enter the name of game to add: ");
-	getline(cin, gd.name);
+	printf("Enter the name of game to add: ");
+	getline(std::cin, gd.name);
 
-	printf_s("Enter the price of game to add: ");
-	getline(cin, price);
+	printf("Enter the price of game to add: ");
+	getline(std::cin, price);
 
-	gd.price = stoi(price);
+	gd.price = std::stoi(price);
 
 	g_data.push_back(gd);
 
-	printf_s("Game added:\n");
+	printf("Game added:\n");
 
-	cout << "Type: " << gd.type << endl;
-	cout << "Name: " << gd.name << endl;
-	cout << "Price: " << gd.price << endl;
+	printf("Type: %s\n", gd.type.c_str());
+	printf("Name: %s\n", gd.name.c_str());
+	printf("Price: %i", gd.price);
 }
 
-void del_game(vector<game_data>& g_data)
+void del_game(std::vector<game_data>& g_data)
 {
 	clear_console();
 
-	string game_name;
+	std::string game_name;
 
-	printf_s("Enter the name of game to delete: ");
-	getline(cin, game_name);
+	printf("Enter the name of game to delete: ");
+	getline(std::cin, game_name);
 
 	int game_id = search_game_id(g_data, game_name);
 
@@ -700,21 +694,21 @@ void del_game(vector<game_data>& g_data)
 	}
 }
 
-void change_game_name(vector<game_data>& g_data)
+void change_game_name(std::vector<game_data>& g_data)
 {
 	auto change_data = game_field_changer(g_data, "new name");
 
 	g_data[change_data.second].name = change_data.first;
 }
 
-void change_game_type(vector<game_data>& g_data)
+void change_game_type(std::vector<game_data>& g_data)
 {
 	auto change_data = game_field_changer(g_data, "new type");
 
 	g_data[change_data.second].type = change_data.first;
 }
 
-void change_game_price(vector<game_data>& g_data)
+void change_game_price(std::vector<game_data>& g_data)
 {
 	auto change_data = game_field_changer(g_data, "new price");
 
